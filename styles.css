@@ -133,6 +133,9 @@ h1, h2, h3 { line-height: 1.15; margin: 0; text-wrap: balance; letter-spacing: -
 .ans { display: flex; align-items: center; gap: 12px; text-align: left; min-height: 56px; padding: 10px 14px; border-radius: 12px; border: 1.5px solid var(--line-2); background: var(--card); font-size: 16px; font-weight: 600; }
 .ans:hover { border-color: var(--ink-3); }
 .ans .k { flex: none; width: 24px; height: 24px; border-radius: 7px; border: 1px solid var(--line-2); display: grid; place-items: center; font-size: 12px; color: var(--ink-3); font-weight: 700; }
+.ans-t { display: flex; flex-direction: column; min-width: 0; }
+.ans-sub { font-size: 14px; font-weight: 400; color: var(--ink-2); }
+.ans-main { font-size: 17px; font-weight: 400; }
 .ans.ok { border-color: var(--ok); background: var(--ok-bg); }
 .ans.bad { border-color: var(--bad); background: var(--bad-bg); }
 .ans.dim { opacity: .5; }
