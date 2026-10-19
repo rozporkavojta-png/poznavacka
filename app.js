@@ -15,6 +15,7 @@ function rnd(n) { // kryptograficky náhodné celé číslo 0..n-1
 function shuffle(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 const pick = arr => arr[rnd(arr.length)];
 const img = f => 'img/' + f;
+const thumb = f => 'img/t/' + f; // malý náhled pro karty a přehledy (šetří data na mobilu)
 const bezDiakritiky = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
 const norm = s => s.toLowerCase().replace(/[„“"”*]/g, '').replace(/\s+/g, ' ').trim();
 function lev(a, b) {
@@ -110,7 +111,7 @@ function card(key, mode, desc, imPart) {
   const [t, fn] = TESTS[key];
   const n = fn().length;
   const pool = key[0] === 'g' ? DRUHY.filter(d => d.g === t) : key === 'red' ? DRUHY.filter(d => d.red) : imPart ? PART[imPart] : DRUHY;
-  const im = key === 'weak' ? img(BY_ID.get(weakIds()[0]).img[0]) : img(pick(pick(pool).img));
+  const im = key === 'weak' ? thumb(BY_ID.get(weakIds()[0]).img[0]) : thumb(pick(pick(pool).img));
   return `<button class="mode" data-m="${key}" data-mode="${mode}"><span class="mode-img" style="background-image:url('${im}')"></span>
     <span class="mode-n">${n} ${sklon(n, 'druh', 'druhy', 'druhů')}</span>
     <span class="mode-b"><h3>${t}</h3><p>${desc}</p></span></button>`;
@@ -498,7 +499,7 @@ function finish() {
     </div>
     <div class="section-t">${wrong.length ? `Chyby (${wrong.length})` : 'Bez chyby, paráda!'}</div>
     <div class="mist">${wrong.map(x => { const d = BY_ID.get(x.id); return `
-      <div class="mcard"><div class="im" data-src="${img(d.img[0])}" style="background-image:url('${img(d.img[0])}')"></div>
+      <div class="mcard"><img class="im" loading="lazy" alt="" data-src="${img(d.img[0])}" src="${thumb(d.img[0])}">
       <div class="t"><b>${esc(d.cz)}</b><span class="lat">${esc(d.lat)}</span><div class="muted">${esc(higherTax(d))}</div>
       ${x.your && !x.ok ? `<div class="you">tvoje: ${esc(x.your)}</div>` : ''}${x.ok && x.tax === false ? '<div class="you">špatné zařazení</div>' : ''}</div></div>`; }).join('')}</div>
   </main>`;
@@ -529,7 +530,7 @@ function viewAtlas() {
     let g = '';
     document.getElementById('al').innerHTML = list.length ? list.map(d => {
       const h = d.g !== g ? `<div class="atlas-h">${(g = d.g)}</div>` : '';
-      return h + `<button class="acard" data-src="${img(d.img[0])}"><span class="im" style="display:block;background-image:url('${img(d.img[0])}')"></span>
+      return h + `<button class="acard" data-src="${img(d.img[0])}"><img class="im" loading="lazy" alt="" src="${thumb(d.img[0])}">
       <span class="t" style="display:block"><b>${esc(d.cz)}</b><span class="lat">${esc(d.lat)}</span><span class="muted" style="display:block">${esc(higherTax(d))}</span></span></button>`;
     }).join('') : '<p class="empty">Nic nenalezeno.</p>';
     document.querySelectorAll('.acard').forEach(b => b.onclick = () => openLightbox(b.dataset.src));
@@ -554,7 +555,7 @@ function viewHist() {
       <td class="r">${x.ok}/${x.n}</td><td class="r">${x.n ? Math.round(x.ok / x.n * 100) : 0}</td></tr>`).join('')}
     </tbody></table></div>` : '<p class="empty">Zatím žádný test. Hurá do toho!</p>'}
     ${weak.length ? `<div class="section-t">Nejčastější chyby</div><div class="mist">${weak.map(id => { const d = BY_ID.get(id), s = profile.sp[id]; return `
-      <div class="mcard"><div class="im" data-src="${img(d.img[0])}" style="background-image:url('${img(d.img[0])}')"></div>
+      <div class="mcard"><img class="im" loading="lazy" alt="" data-src="${img(d.img[0])}" src="${thumb(d.img[0])}">
       <div class="t"><b>${esc(d.cz)}</b><span class="lat">${esc(d.lat)}</span><div class="you">${s.w}× špatně, ${s.c}× dobře</div></div></div>`; }).join('')}</div>` : ''}
   </main>`;
   bindTop();
